@@ -1,0 +1,34 @@
+services:
+  # Swagger UI service
+  swagger-ui:
+    image: swaggerapi/swagger-ui:v5.31.0
+    restart: unless-stopped
+    user: "101:101"
+    environment:
+      SWAGGER_JSON: /srv/finapp/src/openapi.yml
+    volumes:
+      - ./docker/swagger/openapi.yml:/srv/finapp/src/openapi.yml:ro
+    command: []
+    networks:
+      - app-network
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+      - /var/run:rw,noexec,nosuid,size=64m
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.swagger.rule=PathPrefix(`/docs/`)"
+      - "traefik.http.routers.swagger.entrypoints=https"
+      - "traefik.http.routers.swagger.tls=true"
+      - "traefik.http.routers.swagger.middlewares=swagger-auth@file,swagger-strip@file"
+      - "traefik.http.services.swagger.loadbalancer.server.port=8080"
+
+volumes: {}
+
+networks:
+  app-network:
+    external: true

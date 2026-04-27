@@ -1,0 +1,55 @@
+services:
+  # PHP application service
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    user: "${UID:-1000}:${GID:-1000}"
+    restart: unless-stopped
+    volumes:
+      - ./certs/ca.crt:/srv/vovo/certs/ca.crt:ro
+      - ./certs/client.crt:/srv/vovo/certs/public/client.crt:ro
+      - ./certs/client.key:/srv/vovo/certs/private/client.key:ro
+      - ./src:/srv/vovo/src
+    working_dir: /srv/vovo/src
+    command: [
+      "php",
+      "-d",
+      "variables_order=EGPCS",
+      "/srv/vovo/src/artisan",
+      "octane:start",
+      "--server=roadrunner",
+      "--host=0.0.0.0",
+      "--port=8000",
+      "--rpc-port=6001",
+      "--max-requests=500"
+    ]
+    networks:
+      - app-network
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`localhost`)"
+      - "traefik.http.routers.app.entrypoints=https"
+      - "traefik.http.routers.app.tls=true"
+      - "traefik.http.routers.app.service=app-service"
+      - "traefik.http.services.app-service.loadbalancer.server.port=8000"
+      - "traefik.http.routers.telescope.rule=Host(`localhost`) && PathPrefix(`/monitoring`)"
+      - "traefik.http.routers.telescope.entrypoints=https"
+      - "traefik.http.routers.telescope.tls=true"
+      - "traefik.http.routers.telescope.service=telescope-service"
+      - "traefik.http.services.telescope-service.loadbalancer.server.port=8000"
+      - "traefik.http.routers.telescope.middlewares=telescope-auth@file"
+
+volumes: {}
+
+networks:
+  app-network:
+    external: true

@@ -1,0 +1,27 @@
+services:
+  # Trivy security scanner service
+  trivy:
+    image: aquasec/trivy:0.69.3
+    profiles:
+      - security
+    restart: "no"
+    volumes:
+      - ./docker/trivy/trivy.yml:/root/.config/trivy/trivy.yml:ro
+      - trivy-cache:/root/.cache/trivy
+      - ./vendor:/app/vendor:ro
+    command: image --config /root/.config/trivy/trivy.yml finapp-app:latest
+    networks:
+      - app-network
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+volumes:
+  trivy-cache:
+
+networks:
+  app-network:
+    external: true

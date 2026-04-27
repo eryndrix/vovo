@@ -1,0 +1,16 @@
+.git
+.github
+.cursor
+.gitignore
+.docker
+.config
+.env
+.env.*
+*.log
+vendor
+certs/*.key
+certs/ca.key
+docker-compose*.yml
+Dockerfile.*
+!Dockerfile
+README.md
