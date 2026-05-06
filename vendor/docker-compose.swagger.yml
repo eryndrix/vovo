@@ -19,7 +19,9 @@ services:
       - /tmp:rw,noexec,nosuid,size=64m
       - /var/run:rw,noexec,nosuid,size=64m
     labels:
+      # Watchtower enable
       - "com.centurylinklabs.watchtower.enable=true"
+      # Swagger router
       - "traefik.enable=true"
       - "traefik.http.routers.swagger.rule=PathPrefix(`/docs/`)"
       - "traefik.http.routers.swagger.entrypoints=https"
@@ -27,8 +29,10 @@ services:
       - "traefik.http.routers.swagger.middlewares=swagger-auth@file,swagger-strip@file"
       - "traefik.http.services.swagger.loadbalancer.server.port=8080"
 
+# Empty volumes
 volumes: {}
 
+# External network
 networks:
   app-network:
     external: true

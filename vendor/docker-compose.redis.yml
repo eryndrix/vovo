@@ -15,8 +15,10 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
+# Empty volumes
 volumes: {}
 
+# External network
 networks:
   app-network:
     external: true

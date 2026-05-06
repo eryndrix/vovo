@@ -14,5 +14,6 @@ return new class extends Migration
         Schema::ensureExtensionExists(name: 'timescaledb');
         Schema::ensureExtensionExists(name: 'vector');
         Schema::ensureExtensionExists(name: 'btree_gist');
+        Schema::ensureExtensionExists(name: 'unaccent');
     }
 };

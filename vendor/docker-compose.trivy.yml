@@ -19,9 +19,11 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
+# Empty volumes
 volumes:
   trivy-cache:
 
+# External network
 networks:
   app-network:
     external: true

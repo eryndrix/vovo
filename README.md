@@ -24,6 +24,22 @@ High-performance products search API with advanced filtering, sorting, and moder
 | **Rector**       | Latest      | Code modernization       |
 | **PHP CS Fixer** | Latest      | Code style               |
 
+## Performance Highlights
+
+- RoadRunner Octane: 500 reqs/worker, RPC port 6001
+- OPcache: Enabled with 128MB memory
+- Redis caching via pipeline
+- PostgreSQL indexes: GIN trigram + B-tree
+- TLS 1.3: 2048-bit RSA keys, DH params
+
+## Database Extensions
+
+TimescaleDB 2.25.2-pg18 + extensions:
+
+```
+uuid-ossp, pgcrypto, pg_trgm, btree_gin, timescaledb, vector, btree_gist, unaccent
+```
+
 ## Quick Start
 
 ### Prerequisites
@@ -119,22 +135,6 @@ Override user IDs (for file permissions):
 
 ```
 $ make build USER_ID=1000 GROUP_ID=1000
-```
-
-## Performance highlights
-
-- RoadRunner Octane: 500 reqs/worker, RPC port 6001
-- OPcache: Enabled with 128MB memory
-- Redis caching via pipeline
-- PostgreSQL indexes: GIN trigram + B-tree
-- TLS 1.3: 2048-bit RSA keys, DH params
-
-## Database extensions
-
-TimescaleDB 2.25.2-pg18 + extensions:
-
-```
-uuid-ossp, pgcrypto, pg_trgm, btree_gin, timescaledb, vector, btree_gist
 ```
 
 ### Security & Auth
