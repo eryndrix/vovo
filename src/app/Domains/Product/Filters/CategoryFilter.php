@@ -37,6 +37,6 @@ final class CategoryFilter extends Filter
             value: $this->categoryId->asString()
         );
 
-        return $next();
+        return $next($builder);
     }
 }
